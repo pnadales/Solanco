@@ -35,11 +35,12 @@ app.get("/usuarios", async (req, res) => {
 
 app.put("/usuario", async (req, res) => {
     try {
-        const datos = Object.values(req.body);
+        const datos = [req.query.id].concat(Object.values(req.body));
         const respuesta = await editar(datos);
         res.json(respuesta);
 
     } catch (error) {
+        console.log(error)
         res.status(500).send("Hubo un error :c")
     }
 })

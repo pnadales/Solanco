@@ -27,7 +27,7 @@ const consultarUsuario = async () => {
 const editar = async (datos) => {
     const consulta = {
         text: "UPDATE usuarios SET nombre=$2, balance=$3 WHERE id=$1 RETURNING *",
-        vaules: datos
+        values: datos
     }
     const result = await pool.query(consulta);
     return result;
