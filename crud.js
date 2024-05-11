@@ -38,7 +38,8 @@ const eliminar = async (id) => {
 
 }
 
-const insertarTrans = async (datos) => {
+const insertarTransq = async (datos) => {
+    // datos -> emisor, receptor, monto
     const consulta = {
         text: "INSERT INTO transferencias (emisor, receptor, monto, fecha) VALUES ($1, $2, $3, NOW()) RETURNING *",
         values: datos
@@ -59,5 +60,39 @@ const consultaTrans = async (datos) => {
     return result.rows;
 }
 
+
+
+const insertarTrans = async (datos) => {
+    // datos -> emisor, receptor, monto
+
+    console.log("datos trans: ", datos);
+    await pool.query("BEGIN");
+
+    // const consulta = {
+    //     text: "INSERT INTO transferencias (emisor, receptor, monto, fecha) VALUES ($1, $2, $3, NOW()) RETURNING *",
+    //     values: datos
+    // }
+    const descontar = {
+        text: "UPDATE usuarios SET balance = balance - $2 WHERE id=$1",
+        values: [datos[0], datos[2]]
+    };
+    await pool.query(descontar);
+
+    const acreditar = {
+        text: "UPDATE usuarios SET balance = balance + $2 WHERE id=$1",
+        values: [datos[1], datos[2]]
+    };
+    await pool.query(acreditar);
+
+    const insercion = {
+        text: "INSERT INTO transferencias (emisor, receptor, monto, fecha) VALUES ($1, $2, $3, NOW()) RETURNING *",
+        values: datos
+    }
+    const result = await pool.query(insercion)
+
+    await pool.query("COMMIT");
+
+    return result
+}
 
 module.exports = { insertarUsuario, consultarUsuario, editar, eliminar, insertarTrans, consultaTrans };

@@ -71,7 +71,6 @@ app.post("/transferencia", async (req, res) => {
 app.get("/transferencias", async (req, res) => {
     try {
         const registros = await consultaTrans();
-        console.log(JSON.stringify(registros))
         res.json(registros)
     } catch (error) {
         res.status(500).send("Hubo un error :c")
