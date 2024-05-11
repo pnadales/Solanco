@@ -4,7 +4,7 @@ const { text } = require("stream/consumers");
 const pool = new Pool({
     user: "postgres",
     host: "localhost",
-    password: "paulo",
+    password: "pass",
     port: 5432,
     database: "bancosolar"
 })
