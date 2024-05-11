@@ -38,25 +38,14 @@ const eliminar = async (id) => {
 
 }
 
-const insertarTransq = async (datos) => {
-    // datos -> emisor, receptor, monto
-    const consulta = {
-        text: "INSERT INTO transferencias (emisor, receptor, monto, fecha) VALUES ($1, $2, $3, NOW()) RETURNING *",
-        values: datos
-    }
-    const result = await pool.query(consulta)
-    return result
-}
 
 const consultaTrans = async (datos) => {
-    // const result = await pool.query("SELECT * FROM transferencias");
     const consulta = {
         text: "SELECT t.fecha, u.nombre AS emisor, r.nombre, t.monto FROM transferencias t INNER JOIN usuarios u ON u.id = t.emisor INNER JOIN usuarios r ON r.id = t.receptor",
         rowMode: 'array'
     }
     const result = await pool.query(consulta)
-    // const result = await pool.query("SELECT t.fecha, u.nombre AS emisor, r.nombre, t.monto FROM transferencias t INNER JOIN usuarios u ON u.id = t.emisor INNER JOIN usuarios r ON r.id = t.receptor;");
-    // console.log(result)
+
     return result.rows;
 }
 
@@ -68,10 +57,7 @@ const insertarTrans = async (datos) => {
     console.log("datos trans: ", datos);
     await pool.query("BEGIN");
 
-    // const consulta = {
-    //     text: "INSERT INTO transferencias (emisor, receptor, monto, fecha) VALUES ($1, $2, $3, NOW()) RETURNING *",
-    //     values: datos
-    // }
+
     const descontar = {
         text: "UPDATE usuarios SET balance = balance - $2 WHERE id=$1",
         values: [datos[0], datos[2]]

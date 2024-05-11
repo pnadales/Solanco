@@ -62,7 +62,6 @@ app.post("/transferencia", async (req, res) => {
         const respuesta = await insertarTrans(datos)
         res.json(respuesta)
     } catch (error) {
-        console.log("Error mi pana");
         console.log(error)
         res.status(500).send("Hubo un error :c")
     }
