@@ -6,36 +6,50 @@ const pool = new Pool({
     host: "localhost",
     password: "paulo",
     port: 5432,
-    database: "repertorio"
+    database: "bancosolar"
 })
 
-const insertar = async (datos) => {
+const insertarUsuario = async (datos) => {
 
     const consulta = {
-        text: "INSERT INTO canciones VALUES ($1, $2, $3) RETURNING *",
+        text: "INSERT INTO usuarios VALUES ($1, $2) RETURNING *",
         values: datos
     };
     const result = await pool.query(consulta);
     return result
 };
 
-const consultar = async () => {
-    const result = await pool.query("SELECT * FROM canciones");
+const consultarUsuario = async () => {
+    const result = await pool.query("SELECT * FROM usuarios");
     return result;
 }
 
 const editar = async (datos) => {
     const consulta = {
-        text: "UPDATE canciones SET id=$1, titulo=$2, artista=$3, tono=$4  WHERE id=$1 RETURNING *",
+        text: "UPDATE usuarios SET nombre=$2, balance=$3 WHERE id=$1 RETURNING *",
         vaules: datos
     }
     const result = await pool.query(consulta);
-    return consulta;
+    return result;
 }
 
 const eliminar = async (id) => {
-    const result = await pool.query("DELETE FROM canciones WHERE id=$1 RETURNING *", [id]);
+    const result = await pool.query("DELETE FROM usuarios WHERE id=$1 RETURNING *", [id]);
 
 }
 
-module.exports = { insertar, consultar, editar, eliminar };
+const insertarTrans = async (datos) => {
+    const consulta = {
+        text: "INSERT INTO transferencias VALUES ($1, $2, $3, NOW()) RETURNING *",
+        values: datos
+    }
+    const result = await pool.query(consulta)
+    return result
+}
+
+const consultaTrans = async (datos) => {
+    console.log('Funcion en desarrollo');
+}
+
+
+module.exports = { insertarUsuario, consultarUsuario, editar, eliminar, insertarTrans, consultaTrans };

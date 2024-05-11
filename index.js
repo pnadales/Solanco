@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
-const { insertar, consultar, editar, eliminar } = require('./crud')
+const { insertarUsuario, consultarUsuario, editar, eliminar, insertarTrans, consultaTrans } = require('./crud')
 
 
-app.listen(4000, console.log("Servidor en puerto 4000"));
+app.listen(3000, console.log("Servidor en puerto 3000"));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html")
 });
 
-app.post("/cancion", async (req, res) => {
+app.post("/usuario", async (req, res) => {
     try {
         console.log(req.body, req.query)
         const datos = Object.values(req.body);
@@ -21,7 +21,7 @@ app.post("/cancion", async (req, res) => {
     }
 })
 
-app.get("/canciones", async (req, res) => {
+app.get("/usuarios", async (req, res) => {
     try {
         const registros = await consultar();
         res.json(registros)
@@ -31,7 +31,7 @@ app.get("/canciones", async (req, res) => {
     }
 })
 
-app.put("/canciones", async (req, res) => {
+app.put("/usuario", async (req, res) => {
     try {
         const datos = Object.values(req.body);
         const respuesta = await editar(datos);
@@ -42,12 +42,29 @@ app.put("/canciones", async (req, res) => {
     }
 })
 
-app.delete("/canciones", async (req, res) => {
+app.delete("/usuario", async (req, res) => {
     try {
         const { id } = req.query
         const respuesta = await eliminar(id);
         res.json(respuesta);
     } catch (error) {
         res.status(500).send("Hubo un error :c")
+    }
+})
+
+app.post("/transferencia", async (req, res) => {
+    try {
+
+    } catch (error) {
+
+    }
+})
+
+
+app.get("/transferencias", async (req, res) => {
+    try {
+
+    } catch (error) {
+
     }
 })
