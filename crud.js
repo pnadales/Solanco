@@ -12,7 +12,7 @@ const pool = new Pool({
 const insertarUsuario = async (datos) => {
 
     const consulta = {
-        text: "INSERT INTO usuarios VALUES ($1, $2) RETURNING *",
+        text: "INSERT INTO usuarios (nombre, balance) VALUES ($1, $2) RETURNING *",
         values: datos
     };
     const result = await pool.query(consulta);
@@ -21,7 +21,7 @@ const insertarUsuario = async (datos) => {
 
 const consultarUsuario = async () => {
     const result = await pool.query("SELECT * FROM usuarios");
-    return result;
+    return result.rows;
 }
 
 const editar = async (datos) => {
@@ -40,7 +40,7 @@ const eliminar = async (id) => {
 
 const insertarTrans = async (datos) => {
     const consulta = {
-        text: "INSERT INTO transferencias VALUES ($1, $2, $3, NOW()) RETURNING *",
+        text: "INSERT INTO transferencias (emisor, receptor, monto, fecha) VALUES ($1, $2, $3, NOW()) RETURNING *",
         values: datos
     }
     const result = await pool.query(consulta)
@@ -48,7 +48,15 @@ const insertarTrans = async (datos) => {
 }
 
 const consultaTrans = async (datos) => {
-    console.log('Funcion en desarrollo');
+    // const result = await pool.query("SELECT * FROM transferencias");
+    const consulta = {
+        text: "SELECT t.fecha, u.nombre AS emisor, r.nombre, t.monto FROM transferencias t INNER JOIN usuarios u ON u.id = t.emisor INNER JOIN usuarios r ON r.id = t.receptor",
+        rowMode: 'array'
+    }
+    const result = await pool.query(consulta)
+    // const result = await pool.query("SELECT t.fecha, u.nombre AS emisor, r.nombre, t.monto FROM transferencias t INNER JOIN usuarios u ON u.id = t.emisor INNER JOIN usuarios r ON r.id = t.receptor;");
+    // console.log(result)
+    return result.rows;
 }
 
 
